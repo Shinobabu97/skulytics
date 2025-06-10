@@ -40,7 +40,7 @@ const SalesHistory = ({ dataLoaded }: SalesHistoryProps) => {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await axios.get('/api/sales-history')
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/sales-history`)
         setSalesData(response.data)
         // Select first two products by default
         if (response.data.length > 0) {
