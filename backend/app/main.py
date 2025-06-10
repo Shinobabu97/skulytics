@@ -1,10 +1,8 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import numpy as np
-from typing import List, Dict
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import io
 
 app = FastAPI(title="SKUlytics API")
@@ -121,7 +119,7 @@ async def get_forecast():
         forecast = []
         current_date = datetime.strptime(last_month, '%Y-%m')
         for i in range(12):
-            current_date += timedelta(days=32)  # Approximate month increment
+            current_date += relativedelta(months=1)
             forecast_date = current_date.strftime('%Y-%m')
             forecast_value = last_value * \
                 (1.5 ** (i + 1))  # 50% growth per month
