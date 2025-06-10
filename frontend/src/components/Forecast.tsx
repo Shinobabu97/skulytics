@@ -40,8 +40,8 @@ const Forecast = () => {
     const fetchData = async () => {
       try {
         const [salesRes, forecastRes] = await Promise.all([
-          axios.get('http://localhost:8000/sales-history'),
-          axios.get('http://localhost:8000/forecast'),
+          axios.get('/api/sales-history'),
+          axios.get('/api/forecast'),
         ])
         setSalesData(salesRes.data)
         setForecastData(forecastRes.data)

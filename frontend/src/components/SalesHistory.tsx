@@ -36,7 +36,7 @@ const SalesHistory = () => {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/sales-history')
+        const response = await axios.get('/api/sales-history')
         setSalesData(response.data)
         // Select first two products by default
         if (response.data.length > 0) {
