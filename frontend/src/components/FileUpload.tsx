@@ -31,7 +31,7 @@ const FileUpload = ({ onDataLoaded }: FileUploadProps) => {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('/api/upload', formData, {
+      const response = await axios.post('VITE_API_URL/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
