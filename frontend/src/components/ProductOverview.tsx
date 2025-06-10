@@ -23,6 +23,11 @@ const ProductOverview = ({ dataLoaded }: ProductOverviewProps) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      if (!sessionStorage.getItem('dataUploaded')) {
+        setLoading(false)
+        setError('No data uploaded yet. Please upload a CSV file.')
+        return
+      }
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/products`)
         setProducts(response.data)
