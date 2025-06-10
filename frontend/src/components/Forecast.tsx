@@ -42,6 +42,13 @@ const Forecast = ({ dataLoaded }: ForecastProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
+      setError('')
+      if (!sessionStorage.getItem('dataUploaded')) {
+        setLoading(false)
+        setError('No data uploaded yet. Please upload a CSV file.')
+        return
+      }
       try {
         if (!sessionStorage.getItem('dataUploaded')) {
         setLoading(false)
@@ -54,6 +61,7 @@ const Forecast = ({ dataLoaded }: ForecastProps) => {
         ])
         setSalesData(salesRes.data)
         setForecastData(forecastRes.data)
+         setError('')
         if (salesRes.data.length > 0) {
           setSelectedProducts(salesRes.data.slice(0, 2).map((product: SalesData) => product.SKU))
         }
