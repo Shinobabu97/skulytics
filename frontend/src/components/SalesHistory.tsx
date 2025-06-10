@@ -39,6 +39,8 @@ const SalesHistory = ({ dataLoaded }: SalesHistoryProps) => {
 
   useEffect(() => {
     const fetchSalesData = async () => {
+      setLoading(true)
+      setError('')
       if (!sessionStorage.getItem('dataUploaded')) {
         setLoading(false)
         setError('No data uploaded yet. Please upload a CSV file.')
@@ -47,6 +49,7 @@ const SalesHistory = ({ dataLoaded }: SalesHistoryProps) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/sales-history`)
         setSalesData(response.data)
+         setError('')
         // Select first two products by default
         if (response.data.length > 0) {
           setSelectedProducts(response.data.slice(0, 2).map((product: SalesData) => product.SKU))
