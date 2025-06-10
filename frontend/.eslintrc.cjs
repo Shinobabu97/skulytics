@@ -1,0 +1,26 @@
+module.exports = {
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint"],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  env: {
+    browser: true,
+    es2021: true
+  },
+  settings: {
+    react: {
+      version: "detect"
+    }
+  },
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module"
+  },
+  rules: {
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
+  }
+};
