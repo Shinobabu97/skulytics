@@ -47,7 +47,7 @@ function App() {
                 </div>
               </div>
               <div className="flex items-center">
-                <FileUpload onDataLoaded={() => setDataLoaded(true)} />
+                <FileUpload onDataLoaded={() => setDataLoaded(prev => !prev)} />
               </div>
             </div>
           </div>
