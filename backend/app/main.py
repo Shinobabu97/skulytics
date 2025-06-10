@@ -1,12 +1,11 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import numpy as np
-from typing import List, Dict
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import io
 
+API_PREFIX = "/api"
 app = FastAPI(title="SKUlytics API")
 
 # Configure CORS
@@ -22,7 +21,7 @@ app.add_middleware(
 current_data = None
 
 
-@app.post("/upload")
+@app.post(f"{API_PREFIX}/upload")
 async def upload_file(file: UploadFile = File(...)):
     global current_data
 
@@ -68,7 +67,7 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/products")
+@app.get(f"{API_PREFIX}/products")
 async def get_products():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
@@ -76,7 +75,7 @@ async def get_products():
     return current_data
 
 
-@app.get("/sales-history")
+@app.get(f"{API_PREFIX}/sales-history")
 async def get_sales_history():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
@@ -100,7 +99,7 @@ async def get_sales_history():
     return sales_data
 
 
-@app.get("/forecast")
+@app.get(f"{API_PREFIX}/forecast")
 async def get_forecast():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
@@ -121,7 +120,7 @@ async def get_forecast():
         forecast = []
         current_date = datetime.strptime(last_month, '%Y-%m')
         for i in range(12):
-            current_date += timedelta(days=32)  # Approximate month increment
+            current_date += relativedelta(months=1)
             forecast_date = current_date.strftime('%Y-%m')
             forecast_value = last_value * \
                 (1.5 ** (i + 1))  # 50% growth per month
