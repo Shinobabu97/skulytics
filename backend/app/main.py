@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import io
 
+API_PREFIX = "/api"
 app = FastAPI(title="SKUlytics API")
 
 # Configure CORS
@@ -20,7 +21,7 @@ app.add_middleware(
 current_data = None
 
 
-@app.post("/upload")
+@app.post(f"{API_PREFIX}/upload")
 async def upload_file(file: UploadFile = File(...)):
     global current_data
 
@@ -66,7 +67,7 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/products")
+@app.get(f"{API_PREFIX}/products")
 async def get_products():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
@@ -74,7 +75,7 @@ async def get_products():
     return current_data
 
 
-@app.get("/sales-history")
+@app.get(f"{API_PREFIX}/sales-history")
 async def get_sales_history():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
@@ -98,7 +99,7 @@ async def get_sales_history():
     return sales_data
 
 
-@app.get("/forecast")
+@app.get(f"{API_PREFIX}/forecast")
 async def get_forecast():
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
