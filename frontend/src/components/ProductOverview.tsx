@@ -23,6 +23,8 @@ const ProductOverview = ({ dataLoaded }: ProductOverviewProps) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true)
+      setError('')
       if (!sessionStorage.getItem('dataUploaded')) {
         setLoading(false)
         setError('No data uploaded yet. Please upload a CSV file.')
