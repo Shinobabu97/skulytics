@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import ProductOverview from './components/ProductOverview'
 import SalesHistory from './components/SalesHistory'
@@ -8,7 +8,11 @@ import FileUpload from './components/FileUpload'
 
 function App() {
   const [dataLoaded, setDataLoaded] = useState(false)
-
+  
+  useEffect(() => {
+    sessionStorage.removeItem('dataUploaded')
+  }, [])
+  
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
