@@ -10,7 +10,11 @@ interface Product {
   Lagerbestand: number
 }
 
-const ProductOverview = () => {
+interface ProductOverviewProps {
+  dataLoaded: boolean
+}
+
+const ProductOverview = ({ dataLoaded }: ProductOverviewProps) => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -22,15 +26,19 @@ const ProductOverview = () => {
       try {
         const response = await axios.get('/api/products')
         setProducts(response.data)
-      } catch (err) {
-        setError('Failed to fetch products')
+      } catch (err: any) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('No data uploaded yet. Please upload a CSV file.')
+        } else {
+          setError('Failed to fetch products')
+        }
       } finally {
         setLoading(false)
       }
     }
 
     fetchProducts()
-  }, [])
+  }, [dataLoaded])
 
   const categories = [...new Set(products.map(product => product.Kategorie))]
 
