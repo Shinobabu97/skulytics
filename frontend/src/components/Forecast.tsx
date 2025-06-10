@@ -29,7 +29,11 @@ interface ForecastData {
   }>
 }
 
-const Forecast = () => {
+interface ForecastProps {
+  dataLoaded: boolean
+}
+
+const Forecast = ({ dataLoaded }: ForecastProps) => {
   const [salesData, setSalesData] = useState<SalesData[]>([])
   const [forecastData, setForecastData] = useState<ForecastData[]>([])
   const [loading, setLoading] = useState(true)
@@ -40,22 +44,26 @@ const Forecast = () => {
     const fetchData = async () => {
       try {
         const [salesRes, forecastRes] = await Promise.all([
-          axios.get('http://localhost:8000/sales-history'),
-          axios.get('http://localhost:8000/forecast'),
+          axios.get('/api/sales-history'),
+          axios.get('/api/forecast'),
         ])
         setSalesData(salesRes.data)
         setForecastData(forecastRes.data)
         if (salesRes.data.length > 0) {
           setSelectedProducts(salesRes.data.slice(0, 2).map((product: SalesData) => product.SKU))
         }
-      } catch (err) {
-        setError('Failed to fetch sales or forecast data')
+      } catch (err: any) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('No data uploaded yet. Please upload a CSV file.')
+        } else {
+          setError('Failed to fetch sales or forecast data')
+        }
       } finally {
         setLoading(false)
       }
     }
     fetchData()
-  }, [])
+  }, [dataLoaded])
 
   const handleProductSelection = (sku: string) => {
     setSelectedProducts(prev =>
@@ -110,7 +118,7 @@ const Forecast = () => {
 
       <div className="mt-4">
         <div className="flex flex-wrap gap-2">
-          {salesData.map((product, index) => (
+          {salesData.map((product) => (
             <button
               key={product.SKU}
               onClick={() => handleProductSelection(product.SKU)}
