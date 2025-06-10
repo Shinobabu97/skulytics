@@ -43,6 +43,11 @@ const Forecast = ({ dataLoaded }: ForecastProps) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!sessionStorage.getItem('dataUploaded')) {
+        setLoading(false)
+        setError('No data uploaded yet. Please upload a CSV file.')
+        return
+      }
         const [salesRes, forecastRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_API_URL}/sales-history`),
           axios.get(`${import.meta.env.VITE_API_URL}/forecast`),
