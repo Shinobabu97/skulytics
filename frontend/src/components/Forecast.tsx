@@ -44,8 +44,8 @@ const Forecast = ({ dataLoaded }: ForecastProps) => {
     const fetchData = async () => {
       try {
         const [salesRes, forecastRes] = await Promise.all([
-          axios.get('/api/sales-history'),
-          axios.get('/api/forecast'),
+          axios.get(`${import.meta.env.VITE_API_URL}/sales-history`),
+          axios.get(`${import.meta.env.VITE_API_URL}/forecast`),
         ])
         setSalesData(salesRes.data)
         setForecastData(forecastRes.data)
