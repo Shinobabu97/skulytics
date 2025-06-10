@@ -39,6 +39,7 @@ const FileUpload = ({ onDataLoaded }: FileUploadProps) => {
 
       if (response.data.message === 'File uploaded successfully') {
         onDataLoaded()
+        sessionStorage.setItem('dataUploaded', 'true')
         setFile(null)
       }
     } catch (err: any) {
