@@ -1,12 +1,14 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import numpy as np
-from typing import List, Dict
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import io
 
+# All routes are served under this prefix so the frontend can proxy them easily
+API_PREFIX = "/api"
+
+# Initialize FastAPI application
 app = FastAPI(title="SKUlytics API")
 
 # Configure CORS
@@ -18,12 +20,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global variable to store the uploaded data
+# In-memory storage for the uploaded CSV data.
+# In a production setting this would be replaced by a database.
 current_data = None
 
 
-@app.post("/upload")
+@app.post(f"{API_PREFIX}/upload")
 async def upload_file(file: UploadFile = File(...)):
+    """Receive a CSV file and store its contents in memory."""
     global current_data
 
     if not file.filename.endswith('.csv'):
@@ -68,16 +72,18 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/products")
+@app.get(f"{API_PREFIX}/products")
 async def get_products():
+    """Return the raw product records from the uploaded CSV."""
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
 
     return current_data
 
 
-@app.get("/sales-history")
+@app.get(f"{API_PREFIX}/sales-history")
 async def get_sales_history():
+    """Return monthly sales history for each product."""
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
 
@@ -100,8 +106,9 @@ async def get_sales_history():
     return sales_data
 
 
-@app.get("/forecast")
+@app.get(f"{API_PREFIX}/forecast")
 async def get_forecast():
+    """Generate a naive 12 month sales forecast for each product."""
     if current_data is None:
         raise HTTPException(status_code=404, detail="No data uploaded yet")
 
@@ -121,7 +128,7 @@ async def get_forecast():
         forecast = []
         current_date = datetime.strptime(last_month, '%Y-%m')
         for i in range(12):
-            current_date += timedelta(days=32)  # Approximate month increment
+            current_date += relativedelta(months=1)
             forecast_date = current_date.strftime('%Y-%m')
             forecast_value = last_value * \
                 (1.5 ** (i + 1))  # 50% growth per month

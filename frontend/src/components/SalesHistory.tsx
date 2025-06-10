@@ -22,7 +22,13 @@ interface SalesData {
 
 const TIME_FRAMES = [6, 12, 18, 24]
 
-const SalesHistory = () => {
+interface SalesHistoryProps {
+  /** Timestamp used to refetch after a successful upload */
+  dataLoaded: number
+}
+
+// Shows historical sales charts for selected products. Reloads when `dataLoaded` changes.
+const SalesHistory = ({ dataLoaded }: SalesHistoryProps) => {
   const [salesData, setSalesData] = useState<SalesData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,21 +41,27 @@ const SalesHistory = () => {
 
   useEffect(() => {
     const fetchSalesData = async () => {
+      setLoading(true)
+      setError('')
       try {
-        const response = await axios.get('http://localhost:8000/sales-history')
+        const response = await axios.get('/api/sales-history')
         setSalesData(response.data)
         // Select first two products by default
         if (response.data.length > 0) {
           setSelectedProducts(response.data.slice(0, 2).map((product: SalesData) => product.SKU))
         }
-      } catch (err) {
-        setError('Failed to fetch sales data')
+      } catch (err: any) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('No data uploaded yet. Please upload a CSV file.')
+        } else {
+          setError('Failed to fetch sales data')
+        }
       } finally {
         setLoading(false)
       }
     }
     fetchSalesData()
-  }, [])
+  }, [dataLoaded])
 
   // Handle outside click for popover
   useEffect(() => {

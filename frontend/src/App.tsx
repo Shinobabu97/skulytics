@@ -6,8 +6,11 @@ import Forecast from './components/Forecast'
 import Documentation from './components/Documentation'
 import FileUpload from './components/FileUpload'
 
+// The main application component.
+// `dataLoaded` is a timestamp that changes each time a CSV upload succeeds.
+// Pages watch this value and refetch data whenever it updates.
 function App() {
-  const [dataLoaded, setDataLoaded] = useState(false)
+  const [dataLoaded, setDataLoaded] = useState(0)
 
   return (
     <Router>
@@ -47,7 +50,8 @@ function App() {
                 </div>
               </div>
               <div className="flex items-center">
-                <FileUpload onDataLoaded={() => setDataLoaded(true)} />
+                {/* When a file upload succeeds, update the timestamp so pages refresh */}
+                <FileUpload onDataLoaded={() => setDataLoaded(Date.now())} />
               </div>
             </div>
           </div>
@@ -55,9 +59,9 @@ function App() {
 
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <Routes>
-            <Route path="/" element={<ProductOverview />} />
-            <Route path="/sales" element={<SalesHistory />} />
-            <Route path="/forecast" element={<Forecast />} />
+            <Route path="/" element={<ProductOverview dataLoaded={dataLoaded} />} />
+            <Route path="/sales" element={<SalesHistory dataLoaded={dataLoaded} />} />
+            <Route path="/forecast" element={<Forecast dataLoaded={dataLoaded} />} />
             <Route path="/docs" element={<Documentation />} />
           </Routes>
         </main>

@@ -10,7 +10,13 @@ interface Product {
   Lagerbestand: number
 }
 
-const ProductOverview = () => {
+interface ProductOverviewProps {
+  /** Timestamp used to refetch after a successful upload */
+  dataLoaded: number
+}
+
+// Displays a table of all products. Data is refetched whenever `dataLoaded` changes.
+const ProductOverview = ({ dataLoaded }: ProductOverviewProps) => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -19,18 +25,24 @@ const ProductOverview = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true)
+      setError('')
       try {
-        const response = await axios.get('http://localhost:8000/products')
+        const response = await axios.get('/api/products')
         setProducts(response.data)
-      } catch (err) {
-        setError('Failed to fetch products')
+      } catch (err: any) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('No data uploaded yet. Please upload a CSV file.')
+        } else {
+          setError('Failed to fetch products')
+        }
       } finally {
         setLoading(false)
       }
     }
 
     fetchProducts()
-  }, [])
+  }, [dataLoaded])
 
   const categories = [...new Set(products.map(product => product.Kategorie))]
 

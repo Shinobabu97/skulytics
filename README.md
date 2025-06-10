@@ -72,6 +72,12 @@ cd frontend
 npm run dev
 ```
 
+### Automatic data reload
+
+After a successful CSV upload, the frontend updates a `dataLoaded` timestamp in
+`App.tsx`. This value is passed to the main pages so they refetch the latest
+data without requiring a manual refresh.
+
 3. Open your browser and navigate to `http://localhost:5173`
 
 ## CSV Data Format
@@ -95,10 +101,12 @@ Required columns:
 
 ## API Endpoints
 
-- `POST /upload`: Upload CSV file
-- `GET /products`: Get all products
-- `GET /sales-history`: Get historical sales data
-- `GET /forecast`: Get sales forecast
+All endpoints are prefixed with `/api`:
+
+- `POST /api/upload`: Upload CSV file
+- `GET /api/products`: Get all products
+- `GET /api/sales-history`: Get historical sales data
+- `GET /api/forecast`: Get sales forecast
 
 ## Development
 

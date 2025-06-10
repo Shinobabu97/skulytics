@@ -5,6 +5,8 @@ interface FileUploadProps {
   onDataLoaded: () => void
 }
 
+// Simple CSV file upload component used in the navigation bar
+// Calls `onDataLoaded` after a successful upload so parent components can refetch data
 const FileUpload = ({ onDataLoaded }: FileUploadProps) => {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string>('')
@@ -31,7 +33,7 @@ const FileUpload = ({ onDataLoaded }: FileUploadProps) => {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:8000/upload', formData, {
+      const response = await axios.post('/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
