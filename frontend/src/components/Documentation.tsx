@@ -7,7 +7,7 @@ const Documentation = () => {
         <h1 className="text-2xl font-bold text-gray-900 mb-8">Dokumentation & KI-Einsatz</h1>
 
         {/* Technischer Lösungsweg */}
-        <h2 className="text-lg font-semibold text-gray-900 mb-2 mt-8">Kurze Beschreibung deines technischen Lösungswegs</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-2 mt-8">Kurze Beschreibung des technischen Lösungswegs</h2>
         <p className="mb-6 text-sm text-gray-700">
           Die Anwendung wurde als moderne Web-App mit React (Frontend) und FastAPI (Backend) entwickelt. Die Datenverarbeitung und -validierung erfolgt mit Pandas und NumPy. Die Benutzeroberfläche ist responsiv und nutzt Tailwind CSS für ein klares, modernes Design. Die Visualisierung der Verkaufsdaten und Prognosen erfolgt mit Recharts. Die Entwicklung erfolgte iterativ mit kontinuierlichem Debugging und visuellen Verbesserungen direkt im Editor.
         </p>
